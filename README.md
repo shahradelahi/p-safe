@@ -1,0 +1,2 @@
+# p-safe
+Safe promise
