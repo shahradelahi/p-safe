@@ -61,7 +61,7 @@ promise rejections. It's a simple and clean way to handle promise rejections wit
 
 Check out the [tests](/index.test.ts) for more examples.
 
-## Related
+### Related
 
 - [p-catch-if](https://github.com/sindresorhus/p-catch-if) - Conditional promise catch handler
 - [p-if](https://github.com/sindresorhus/p-if) - Conditional promise chains
