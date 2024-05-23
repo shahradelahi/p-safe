@@ -1,10 +1,11 @@
 # p-safe
 
-> Safely handle promise rejections
-
-[![codecov](https://codecov.io/gh/shahradelahi/p-safe/branch/master/graph/badge.svg)](https://codecov.io/gh/shahradelahi/p-safe)
 [![npm](https://img.shields.io/npm/v/p-safe)](https://www.npmjs.com/package/p-safe)
 [![npm bundle size](https://packagephobia.now.sh/badge?p=p-safe)](https://packagephobia.now.sh/result?p=p-safe)
+
+> Safely handle promise rejections
+
+Useful for codes that are way out of your league and you want to handle everything! (e.g. API calls)
 
 ### Install
 
@@ -15,17 +16,21 @@ npm install p-safe
 ### Usage
 
 ```typescript
-import { trySafe, type SafeReturn } from 'p-safe';
+import { trySafe } from 'p-safe';
 
-const { error } = trySafe(async (): SafeReturn<never, Error> => {
+const { error } = trySafe<void, CustomError>(async (_, reject) => {
   await promiseThatMightReject();
-  await fetch('...');
+  const { statusText } = await fetch('...');
+  if (statusText !== 'OK') {
+    reject(new CustomError('Request failed for a silly reason'));
+  }
 });
+
+// Return type is `SafeReturn<void, CustomError>`
 
 if (error) {
   // Handle error
-  console.error(error);
-  return;
+  return console.error(error);
 }
 
 console.log(error); // undefined
@@ -47,8 +52,8 @@ async function foo(): Promise<SafeReturn<object, Error>> {
 const { data, error } = await foo();
 
 if (error) {
-  // Handle error
-  console.error(error);
+  console.log(error); // ERROR
+  console.log(data); // undefined
   return;
 }
 

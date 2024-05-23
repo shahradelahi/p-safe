@@ -13,19 +13,33 @@ export type SafeReturn<T, K = Error> = Partial<{
       }
   );
 
-export type TrySafeFn<T, K> = () =>
-  | SafeReturn<T, K>
-  | Promise<SafeReturn<T, K>>
-  | void
-  | Promise<void>;
+export type TrySafeFn<T, K> = (
+  resolve: (data: T) => void,
+  reject: (reason: K) => void
+) => SafeReturn<T, K> | Promise<SafeReturn<T, K>> | void | Promise<void>;
 
 export async function trySafe<T = void, E = Error>(fn: TrySafeFn<T, E>): Promise<SafeReturn<T, E>> {
   try {
-    const res = await fn();
-    if (typeof res === 'object') {
-      return res;
+    let nrs = undefined;
+
+    const res = await fn(
+      (data: T) => {
+        nrs = { data };
+      },
+      (reason: E) => {
+        nrs = { error: reason };
+      }
+    );
+
+    if (typeof nrs !== 'undefined') {
+      return nrs;
     }
-    return { data: void 0, error: void 0 } as SafeReturn<T, E>;
+
+    if (typeof res === 'undefined') {
+      return { data: void 0, error: void 0 } as SafeReturn<T, E>;
+    }
+
+    return res;
   } catch (error) {
     return { error: error as E };
   }

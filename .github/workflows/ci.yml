@@ -2,10 +2,11 @@ name: CI
 
 on:
   push:
+    branches: [master]
   pull_request:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.number || github.sha }}
+  group: '${{ github.workflow }}-${{ github.event.number || github.sha }}'
   cancel-in-progress: true
 
 jobs:
@@ -53,17 +54,3 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
-
-  codecov:
-    runs-on: ubuntu-latest
-    needs:
-      - format
-      - typecheck
-      - tests
-    steps:
-      - uses: actions/checkout@v4
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v4.0.1
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          slug: shahradelahi/p-safe
