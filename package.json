@@ -9,8 +9,8 @@
     "result",
     "try-safe"
   ],
-  "homepage": "https://github.com/shahradelahi/ts-env",
-  "repository": "github:shahradelahi/ts-env",
+  "homepage": "https://github.com/shahradelahi/p-safe",
+  "repository": "github:shahradelahi/p-safe",
   "license": "MIT",
   "author": "Shahrad Elahi <shahrad@litehex.com> (https://github.com/shahradelahi)",
   "type": "module",
