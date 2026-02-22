@@ -17,6 +17,9 @@ importers:
       '@shahrad/prettier-config':
         specifier: ^1.2.2
         version: 1.2.2(@ianvs/prettier-plugin-sort-imports@4.5.1(prettier@3.8.1))(prettier-plugin-packagejson@2.5.18(prettier@3.8.1))(prettier-plugin-sh@0.15.0(prettier@3.8.1))(prettier@3.8.1)
+      '@shahrad/tsconfig':
+        specifier: ^1.2.0
+        version: 1.2.0
       '@types/node':
         specifier: ^20.12.12
         version: 20.19.33
@@ -575,6 +578,10 @@ packages:
       prettier: '>=3.0.0'
       prettier-plugin-packagejson: ^2.5
       prettier-plugin-sh: ^0.15
+
+  '@shahrad/tsconfig@1.2.0':
+    resolution: {integrity: sha512-5NM7tPrvUGF+VPqNgsjgWJ5aLJBcNiM/7aAsXw3PEZVek4Mfxq4vd7BLbjUsYd9HizgaNeCmfK5kIsxtCXp7/Q==}
+    engines: {node: '>=18'}
 
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
@@ -2167,6 +2174,8 @@ snapshots:
       prettier: 3.8.1
       prettier-plugin-packagejson: 2.5.18(prettier@3.8.1)
       prettier-plugin-sh: 0.15.0(prettier@3.8.1)
+
+  '@shahrad/tsconfig@1.2.0': {}
 
   '@standard-schema/spec@1.1.0': {}
 

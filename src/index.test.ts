@@ -1,6 +1,6 @@
 import { expect, expectTypeOf, it } from 'vitest';
 
-import { SafeReturn, trySafe } from './index.ts';
+import { SafeReturn, trySafe } from '.';
 
 async function fn(): Promise<SafeReturn<number, Error>> {
   if (Math.random() > 0.5) {
@@ -14,7 +14,7 @@ async function fn(): Promise<SafeReturn<number, Error>> {
 }
 
 class MathError extends Error {
-  name = 'NerdsOnlyError';
+  override name = 'NerdsOnlyError';
 }
 
 function safePrime(num: number) {
