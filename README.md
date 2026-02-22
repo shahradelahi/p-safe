@@ -45,20 +45,21 @@ yarn add p-safe
 
 ### Basic Usage
 
-Safely execute an async function and handle the result or error in a single line.
+Safely execute an async operation and handle the result or error without `try/catch`.
 
 ```ts
 import { trySafe } from 'p-safe';
 
-const { data, error } = await trySafe(async () => {
-  return await fetchData();
+const { data, error } = await trySafe(async (resolve) => {
+  const res = await fetch('https://api.example.com/data');
+  resolve(await res.json());
 });
 
 if (error) {
-  return console.error('Failed to fetch:', error);
+  console.error('Fetch failed:', error);
+} else {
+  console.log('Data:', data);
 }
-
-console.log('Data:', data);
 ```
 
 ### Manual Resolve/Reject
@@ -70,7 +71,7 @@ import { trySafe } from 'p-safe';
 
 const { error } = await trySafe(async (resolve, reject) => {
   const resp = await fetch('https://api.example.com/data');
-  
+
   if (!resp.ok) {
     return reject(new Error('Request failed'));
   }
@@ -88,11 +89,11 @@ import type { SafeReturn } from 'p-safe';
 
 async function getUser(id: string): Promise<SafeReturn<User, Error>> {
   const user = await db.users.find(id);
-  
+
   if (!user) {
     return { error: new Error('User not found') };
   }
-  
+
   return { data: user };
 }
 
@@ -106,12 +107,14 @@ Leverage TypeScript to ensure your error handling is robust and type-safe.
 ```ts
 class MathError extends Error {}
 
-const { data, error } = await trySafe<number, MathError>(async (resolve, reject) => {
-  if (isInvalid) {
-    reject(new MathError('Invalid input'));
+const { data, error } = await trySafe<number, MathError>(
+  async (resolve, reject) => {
+    if (isInvalid) {
+      reject(new MathError('Invalid input'));
+    }
+    resolve(42);
   }
-  resolve(42);
-});
+);
 
 // error is typed as MathError | undefined
 // data is typed as number | undefined

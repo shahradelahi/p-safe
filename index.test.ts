@@ -1,6 +1,6 @@
-import { expectType } from 'tsd';
-import { SafeReturn, trySafe } from 'p-safe';
 import { expect } from 'chai';
+import { SafeReturn, trySafe } from 'p-safe';
+import { expectType } from 'tsd';
 
 async function fn(): Promise<SafeReturn<number, Error>> {
   if (Math.random() > 0.5) {
