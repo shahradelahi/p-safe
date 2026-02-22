@@ -2,54 +2,44 @@ name: CI
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
-
-concurrency:
-  group: '${{ github.workflow }}-${{ github.event.number || github.sha }}'
-  cancel-in-progress: true
 
 jobs:
   format:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
         with:
-          version: 8
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
+          node-version: 22
           cache: 'pnpm'
 
       - run: pnpm install --frozen-lockfile
-      - run: pnpm run format:check
+      - run: pnpm format:check
 
-  typecheck:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
         with:
-          version: 8
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
+          node-version: 22
           cache: 'pnpm'
 
       - run: pnpm install --frozen-lockfile
-      - run: pnpm run typecheck
+      - run: pnpm lint
 
-  tests:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
         with:
-          version: 8
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
+          node-version: 22
           cache: 'pnpm'
 
       - run: pnpm install --frozen-lockfile

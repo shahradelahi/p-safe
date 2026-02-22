@@ -1,37 +1,31 @@
 {
   "name": "p-safe",
   "version": "1.0.0",
-  "keywords": [
-    "promise",
-    "safe",
-    "try"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/shahradelahi/p-safe.git"
-  },
+  "description": "",
+  "keywords": [],
+  "homepage": "https://github.com/shahradelahi/ts-env",
+  "repository": "github:shahradelahi/ts-env",
   "license": "MIT",
   "author": "Shahrad Elahi <shahrad@litehex.com> (https://github.com/shahradelahi)",
+  "type": "module",
   "exports": {
     ".": {
-      "import": {
-        "types": "./dist/index.d.mts",
-        "default": "./dist/index.mjs"
-      },
-      "require": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      }
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.cjs"
     }
   },
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist/**"
+    "dist/**",
+    "!**/*.d.cts"
   ],
   "scripts": {
     "build": "tsup",
+    "ci:publish": "changeset publish",
+    "clean": "git clean -dfx node_modules dist .tsbuildinfo",
     "dev": "tsup --watch",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -43,6 +37,7 @@
   },
   "prettier": "@shahrad/prettier-config",
   "devDependencies": {
+    "@changesets/cli": "^2.29.8",
     "@shahrad/eslint-config": "^1.0.1",
     "@shahrad/prettier-config": "^1.2.2",
     "@types/chai": "^4.3.16",
@@ -61,6 +56,6 @@
   "packageManager": "pnpm@10.30.1+sha512.3590e550d5384caa39bd5c7c739f72270234b2f6059e13018f975c313b1eb9fefcc09714048765d4d9efe961382c312e624572c0420762bdc5d5940cdf9be73a",
   "publishConfig": {
     "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "provenance": true
   }
 }
