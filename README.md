@@ -1,79 +1,132 @@
-# p-safe
+<h1 align="center">
+  <sup>p-safe</sup>
+  <br>
+  <a href="https://github.com/shahradelahi/p-safe/actions/workflows/ci.yml"><img src="https://github.com/shahradelahi/p-safe/actions/workflows/ci.yml/badge.svg?branch=main&event=push" alt="CI"></a>
+  <a href="https://www.npmjs.com/package/p-safe"><img src="https://img.shields.io/npm/v/p-safe.svg" alt="NPM Version"></a>
+  <a href="/LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat" alt="MIT License"></a>
+  <a href="https://bundlephobia.com/package/p-safe"><img src="https://img.shields.io/bundlephobia/minzip/p-safe" alt="npm bundle size"></a>
+  <a href="https://packagephobia.com/result?p=p-safe"><img src="https://packagephobia.com/badge?p=p-safe" alt="Install Size"></a>
+</h1>
 
-[![npm](https://img.shields.io/npm/v/p-safe)](https://www.npmjs.com/package/p-safe)
-[![npm bundle size](https://packagephobia.now.sh/badge?p=p-safe)](https://packagephobia.now.sh/result?p=p-safe)
+_p-safe_ provides a clean and elegant way to safely handle promise rejections without `try/catch` blocks.
 
-> Safely handle promise rejections
+---
 
-Useful for codes that are way out of your league and you want to handle everything! (e.g. API calls)
+- [Installation](#-installation)
+- [Usage](#-usage)
+- [Documentation](#-documentation)
+- [Contributing](#-contributing)
+- [License](#license)
 
-### Install
+## 📦 Installation
 
 ```bash
 npm install p-safe
 ```
 
-### Usage
+<details>
+<summary>Install using your favorite package manager</summary>
 
-```typescript
+**pnpm**
+
+```bash
+pnpm install p-safe
+```
+
+**yarn**
+
+```bash
+yarn add p-safe
+```
+
+</details>
+
+## 📖 Usage
+
+### Basic Usage
+
+Safely execute an async function and handle the result or error in a single line.
+
+```ts
 import { trySafe } from 'p-safe';
 
-const { error } = trySafe<void, CustomError>(async (_, reject) => {
-  await promiseThatMightReject();
-  const { statusText } = await fetch('...');
-  if (statusText !== 'OK') {
-    reject(new CustomError('Request failed for a silly reason'));
-  }
+const { data, error } = await trySafe(async () => {
+  return await fetchData();
 });
 
-// Return type is `SafeReturn<void, CustomError>`
-
 if (error) {
-  // Handle error
-  return console.error(error);
+  return console.error('Failed to fetch:', error);
 }
 
-console.log(error); // undefined
+console.log('Data:', data);
 ```
 
-Or implement your function and only use `SafeReturn` type:
+### Manual Resolve/Reject
 
-```typescript
+Use the `resolve` and `reject` callbacks for more control over the result, similar to the `Promise` constructor.
+
+```ts
+import { trySafe } from 'p-safe';
+
+const { error } = await trySafe(async (resolve, reject) => {
+  const resp = await fetch('https://api.example.com/data');
+  
+  if (!resp.ok) {
+    return reject(new Error('Request failed'));
+  }
+
+  resolve(await resp.json());
+});
+```
+
+### SafeReturn Type
+
+Integrate `SafeReturn` into your own functions for consistent error handling across your codebase.
+
+```ts
 import type { SafeReturn } from 'p-safe';
 
-async function foo(): Promise<SafeReturn<object, Error>> {
-  const resp = await fetch('...');
-  if (!resp.ok) {
-    return { error: new Error('Request failed for a silly reason') };
+async function getUser(id: string): Promise<SafeReturn<User, Error>> {
+  const user = await db.users.find(id);
+  
+  if (!user) {
+    return { error: new Error('User not found') };
   }
-  return { data: await resp.json() };
+  
+  return { data: user };
 }
 
-const { data, error } = await foo();
-
-if (error) {
-  console.log(error); // ERROR
-  console.log(data); // undefined
-  return;
-}
-
-console.log(error); // undefined
-console.log(data); // { ... }
+const { data, error } = await getUser('123');
 ```
 
-Are you still confused? Let me explain it in a simple way. `p-safe` is a simple utility that helps you to safely handle
-promise rejections. It's a simple and clean way to handle promise rejections without using `try/catch` blocks.
+### Strict Typing
 
-Check out the [tests](/index.test.ts) for more examples.
+Leverage TypeScript to ensure your error handling is robust and type-safe.
 
-### Related
+```ts
+class MathError extends Error {}
 
-- [p-catch-if](https://github.com/sindresorhus/p-catch-if) - Conditional promise catch handler
-- [p-if](https://github.com/sindresorhus/p-if) - Conditional promise chains
-- [p-tap](https://github.com/sindresorhus/p-tap) - Tap into a promise chain without affecting its value or state
-- [p-log](https://github.com/sindresorhus/p-log) - Log the value/error of a promise
-- [More…](https://github.com/sindresorhus/promise-fun)
+const { data, error } = await trySafe<number, MathError>(async (resolve, reject) => {
+  if (isInvalid) {
+    reject(new MathError('Invalid input'));
+  }
+  resolve(42);
+});
 
-### License
+// error is typed as MathError | undefined
+// data is typed as number | undefined
+```
 
-[MIT](/LICENSE) © [Shahrad Elahi](https://github.com/shahradelahi)
+## 📚 Documentation
+
+For all configuration options, please see [the API docs](https://www.jsdocs.io/package/p-safe).
+
+## 🤝 Contributing
+
+Want to contribute? Awesome! To show your support is to star the project, or to raise issues on [GitHub](https://github.com/shahradelahi/p-safe).
+
+Thanks again for your support, it is much appreciated! 🙏
+
+## License
+
+[MIT](/LICENSE) © [Shahrad Elahi](https://github.com/shahradelahi).
