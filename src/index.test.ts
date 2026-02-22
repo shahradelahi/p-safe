@@ -1,5 +1,4 @@
-import { expect } from 'chai';
-import { expectType } from 'tsd';
+import { expect, expectTypeOf, it } from 'vitest';
 
 import { SafeReturn, trySafe } from './index.ts';
 
@@ -46,44 +45,44 @@ function safePrime(num: number) {
 it('Must match typeof return value with SafeReturn', async () => {
   const res = await trySafe(fn);
 
-  expectType<SafeReturn<number>>(res);
+  expectTypeOf(res).toEqualTypeOf<SafeReturn<number>>();
 
   if (res.error) {
-    expectType<Error>(res.error);
+    expectTypeOf(res.error).toEqualTypeOf<Error>();
 
-    expect(res.error).to.be.instanceOf(Error);
-    expect(res.data).to.be.undefined;
+    expect(res.error).toBeInstanceOf(Error);
+    expect(res.data).toBeUndefined();
 
     return void 0; // Stop here
   }
 
-  expectType<undefined>(res.error);
-  expectType<number>(res.data);
+  expectTypeOf(res.error).toEqualTypeOf<undefined>();
+  expectTypeOf(res.data).toEqualTypeOf<number>();
 
-  expect(res.data).to.be.a('number');
-  expect(res.error).to.be.undefined;
+  expect(res.data).toBeTypeOf('number');
+  expect(res.error).toBeUndefined();
 });
 
 it('should Must return type with SafeReturn', async () => {
   const res = await fn();
 
-  expectType<SafeReturn<number>>(res);
-  expect(res).to.be.an('object');
+  expectTypeOf(res).toEqualTypeOf<SafeReturn<number>>();
+  expect(res).toBeTypeOf('object');
 
   if (res.error) {
-    expectType<Error>(res.error);
+    expectTypeOf(res.error).toEqualTypeOf<Error>();
 
-    expect(res.error).to.be.instanceOf(Error);
-    expect(res.data).to.be.undefined;
+    expect(res.error).toBeInstanceOf(Error);
+    expect(res.data).toBeUndefined();
 
     return void 0; // Stop here
   }
 
-  expectType<undefined>(res.error);
-  expectType<number>(res.data);
+  expectTypeOf(res.error).toEqualTypeOf<undefined>();
+  expectTypeOf(res.data).toEqualTypeOf<number>();
 
-  expect(res.data).to.be.a('number');
-  expect(res.error).to.be.undefined;
+  expect(res.data).toBeTypeOf('number');
+  expect(res.error).toBeUndefined();
 });
 
 it('should have a name', async () => {
@@ -95,37 +94,37 @@ it('should have a name', async () => {
     }
   });
 
-  expectType<SafeReturn<void, Error>>(re);
+  expectTypeOf(re).toEqualTypeOf<SafeReturn<void, Error>>();
 
   if (re.error) {
-    expectType<Error>(re.error);
+    expectTypeOf(re.error).toEqualTypeOf<Error>();
 
-    expect(re.error).to.be.instanceOf(Error);
-    expect(re.data).to.be.undefined;
+    expect(re.error).toBeInstanceOf(Error);
+    expect(re.data).toBeUndefined();
 
     return;
   }
 
-  expectType<undefined>(re.error);
-  expectType<void>(re.data);
+  expectTypeOf(re.error).toEqualTypeOf<undefined>();
+  expectTypeOf(re.data).toBeVoid();
 
-  expect(re.data).to.be.undefined;
-  expect(re.error).to.be.undefined;
+  expect(re.data).toBeUndefined();
+  expect(re.error).toBeUndefined();
 });
 
 it('should work like a promise constructor', async () => {
   const { data, error } = await safePrime(7);
 
   if (typeof data === 'undefined') {
-    expectType<MathError>(error);
+    expectTypeOf(error).toEqualTypeOf<MathError>();
   }
 
   if (typeof error === 'undefined') {
-    expectType<number>(data);
+    expectTypeOf(data).toEqualTypeOf<number>();
   }
 
-  expect(error).to.be.undefined;
-  expect(data).to.be.a('number');
+  expect(error).toBeUndefined();
+  expect(data).toBeTypeOf('number');
 });
 
 async function promiseThatMightReject() {

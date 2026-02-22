@@ -1,8 +1,14 @@
 {
   "name": "p-safe",
   "version": "1.0.0",
-  "description": "",
-  "keywords": [],
+  "description": "A simple, type-safe wrapper for handling errors without try-catch blocks.",
+  "keywords": [
+    "safe",
+    "error-handling",
+    "typescript",
+    "result",
+    "try-safe"
+  ],
   "homepage": "https://github.com/shahradelahi/ts-env",
   "repository": "github:shahradelahi/ts-env",
   "license": "MIT",
@@ -32,7 +38,7 @@
     "lint": "pnpm typecheck && eslint .",
     "lint:fix": "eslint --fix .",
     "prepublishOnly": "pnpm lint && pnpm format:check && pnpm build && pnpm test",
-    "test": "mocha \"**/*.test.ts\"",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "prettier": "@shahrad/prettier-config",
@@ -40,18 +46,13 @@
     "@changesets/cli": "^2.29.8",
     "@shahrad/eslint-config": "^1.0.1",
     "@shahrad/prettier-config": "^1.2.2",
-    "@types/chai": "^4.3.16",
-    "@types/mocha": "^10.0.6",
     "@types/node": "^20.12.12",
-    "chai": "^5.1.1",
     "eslint": "^10.0.0",
     "globals": "^17.3.0",
-    "mocha": "^10.4.0",
     "prettier": "^3.8.1",
-    "tsd": "^0.31.0",
     "tsup": "^8.0.2",
-    "tsx": "^4.11.0",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "vitest": "^4.0.18"
   },
   "packageManager": "pnpm@10.30.1+sha512.3590e550d5384caa39bd5c7c739f72270234b2f6059e13018f975c313b1eb9fefcc09714048765d4d9efe961382c312e624572c0420762bdc5d5940cdf9be73a",
   "publishConfig": {
