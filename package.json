@@ -1,6 +1,6 @@
 {
   "name": "p-safe",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "A simple, type-safe wrapper for handling errors without try-catch blocks.",
   "keywords": [
     "safe",
