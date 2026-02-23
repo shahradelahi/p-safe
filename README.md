@@ -8,10 +8,19 @@
   <a href="https://packagephobia.com/result?p=p-safe"><img src="https://packagephobia.com/badge?p=p-safe" alt="Install Size"></a>
 </h1>
 
-_p-safe_ provides a clean and elegant way to safely handle promise rejections without `try/catch` blocks.
+_p-safe_ provides a clean and elegant way to safely handle promise rejections and function errors without messy `try/catch` blocks.
+
+## Benefits
+
+- **Avoid Scoping Issues:** Keep variables in local scope using `const` instead of declaring `let` outside `try/catch` blocks.
+- **Better Type Inference:** Strictly type your errors instead of dealing with `any` or `unknown` in catch blocks.
+- **Clean Control Flow:** Promotes a "fail-fast" pattern with flatter, more readable code that's easier to maintain.
+- **Flexible Patterns:** Support for both Result pattern (`trySafe`) and Optional pattern (`tryIgnore`) depending on your needs.
+- **Async Native:** Fully capable of wrapping both synchronous and asynchronous functions elegantly.
 
 ---
 
+- [Benefits](#benefits)
 - [Installation](#-installation)
 - [Usage](#-usage)
 - [Documentation](#-documentation)
@@ -43,76 +52,60 @@ yarn add p-safe
 
 ## 📖 Usage
 
-### Basic Usage
+### Result Pattern (`trySafe`)
 
-Safely execute an async operation and handle the result or error without `try/catch`.
+Safely execute an operation and get back a structured object. This is best when you need to handle the error specifically.
 
+<!-- prettier-ignore -->
 ```ts
 import { trySafe } from 'p-safe';
 
-const { data, error } = await trySafe(async (resolve) => {
-  const res = await fetch('https://api.example.com/data');
-  resolve(await res.json());
-});
+const { data, error } = await trySafe(() => fetchUser(id));
 
 if (error) {
-  console.error('Fetch failed:', error);
-} else {
-  console.log('Data:', data);
+  return console.error('Failed to load user:', error.message);
 }
+
+console.log('User name:', data.name);
+```
+
+### Optional Pattern (`tryIgnore`)
+
+Use this for "nice-to-have" operations where you don't care _why_ it failed, you just want the result or `null`.
+
+```ts
+import { tryIgnore } from 'p-safe';
+
+// If JSON is invalid, config will simply be null
+const config = await tryIgnore(() => JSON.parse(maybeJson));
+
+// If the file doesn't exist, it returns null instead of throwing
+const stats = await tryIgnore(() => fs.promises.stat('./optional-file.txt'));
 ```
 
 ### Manual Resolve/Reject
 
-Use the `resolve` and `reject` callbacks for more control over the result, similar to the `Promise` constructor.
+Use the `resolve` and `reject` callbacks for granular control, similar to the `Promise` constructor.
 
 ```ts
-import { trySafe } from 'p-safe';
-
-const { error } = await trySafe(async (resolve, reject) => {
-  const resp = await fetch('https://api.example.com/data');
-
-  if (!resp.ok) {
-    return reject(new Error('Request failed'));
-  }
-
+const { data, error } = await trySafe(async (resolve, reject) => {
+  const resp = await fetch(url);
+  if (!resp.ok) return reject(new Error('Fetch failed'));
   resolve(await resp.json());
 });
 ```
 
-### SafeReturn Type
-
-Integrate `SafeReturn` into your own functions for consistent error handling across your codebase.
-
-```ts
-import type { SafeReturn } from 'p-safe';
-
-async function getUser(id: string): Promise<SafeReturn<User, Error>> {
-  const user = await db.users.find(id);
-
-  if (!user) {
-    return { error: new Error('User not found') };
-  }
-
-  return { data: user };
-}
-
-const { data, error } = await getUser('123');
-```
-
 ### Strict Typing
 
-Leverage TypeScript to ensure your error handling is robust and type-safe.
+Leverage TypeScript to ensure your error handling is robust and type-safe by defining custom error types.
 
 ```ts
 class MathError extends Error {}
 
 const { data, error } = await trySafe<number, MathError>(
   async (resolve, reject) => {
-    if (isInvalid) {
-      reject(new MathError('Invalid input'));
-    }
-    resolve(42);
+    if (num < 0) return reject(new MathError('Negative number'));
+    resolve(Math.sqrt(num));
   }
 );
 
@@ -132,4 +125,4 @@ Thanks again for your support, it is much appreciated! 🙏
 
 ## License
 
-[MIT](/LICENSE) © [Shahrad Elahi](https://github.com/shahradelahi).
+[MIT](/LICENSE) © [Shahrad Elahi](https://github.com/shahradelahi) and [contributors](https://github.com/shahradelahi/p-safe/graphs/contributors).

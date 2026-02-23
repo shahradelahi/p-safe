@@ -1,3 +1,5 @@
+export type AnyFunction = (...args: any[]) => any;
+
 export type SafeReturn<T, K = Error> = Partial<{
   data: T;
   error: K;

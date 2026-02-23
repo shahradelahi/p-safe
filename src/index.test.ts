@@ -1,6 +1,6 @@
 import { expect, expectTypeOf, it } from 'vitest';
 
-import { SafeReturn, trySafe } from '.';
+import { SafeReturn, tryIgnore, trySafe } from '.';
 
 async function fn(): Promise<SafeReturn<number, Error>> {
   if (Math.random() > 0.5) {
@@ -130,3 +130,31 @@ it('should work like a promise constructor', async () => {
 async function promiseThatMightReject() {
   throw new Error('Rejected');
 }
+
+it('should ignore errors and return null with tryIgnore', async () => {
+  const res = await tryIgnore(() => {
+    throw new Error('Test');
+  });
+
+  expect(res).toBeNull();
+});
+
+it('should return value if no error with tryIgnore', async () => {
+  const res = await tryIgnore(() => 42);
+
+  expectTypeOf(res).toEqualTypeOf<number | null>();
+  expect(res).toBe(42);
+});
+
+it('should handle async functions in tryIgnore', async () => {
+  const res = await tryIgnore(async () => {
+    throw new Error('Test');
+  });
+
+  expect(res).toBeNull();
+
+  const res2 = await tryIgnore(async () => 42);
+
+  expectTypeOf(res2).toEqualTypeOf<number | null>();
+  expect(res2).toBe(42);
+});
