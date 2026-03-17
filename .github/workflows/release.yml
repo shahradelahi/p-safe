@@ -21,7 +21,7 @@ jobs:
           fetch-depth: 0
 
       - name: Use PNPM
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v5
 
       - name: Use Node v22
         uses: actions/setup-node@v6
